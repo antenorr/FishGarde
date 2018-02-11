@@ -45,7 +45,15 @@ const result = new Promise((resolve, reject) => {
         return data;
     }).catch(err => console.log(err));
   
+   
 
+
+ db.collection('inventory').insertMany(
+        regulationData 
+    ).then(function(result) {
+    // process result
+    console.log(result.insertedIds);
+})
 
 
 
