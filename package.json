@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "mongodb": "^3.0.2",
+    "promise": "^8.0.1",
     "tabletojson": "^0.7.1"
   }
 }

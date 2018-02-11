@@ -1,34 +1,51 @@
 
 var MongoClient = require('mongodb').MongoClient;
+const Promise = require('promise');
 
 
 
 var tabletojson = require('tabletojson');
 var url = 'https://govt.westlaw.com/nycrr/Document/I21c04bfbc22211ddb7c8fb397c5bd26b?viewType=FullText&originationContext=documenttoc&transitionType=CategoryPageItem&contextData=(sc.Default)';
 
-const regultionData = tabletojson.convertUrl(url, function(tablesAsJson) {
-  var listofRegs = tablesAsJson[0];
-  for (let i = 0;i < listofRegs.length; i++) {
-        if(listofRegs[i].Water.includes('(a)') ||listofRegs[i].Water.includes('(b)') || listofRegs[i].Water.includes('(c)') || listofRegs[i].Water.includes('(d)') ) {
+//INITIAL VERSION OF THE CODE
+// const regultionData = tabletojson.convertUrl(url, function(tablesAsJson) {
+//   var listofRegs = tablesAsJson[0];
+//   for (let i = 0;i < listofRegs.length; i++) {
+//       if(listofRegs[i].Water.includes('(a)') ||listofRegs[i].Water.includes('(b)') || listofRegs[i].Water.includes('(c)') || listofRegs[i].Water.includes('(d)') ) {
+//       listofRegs[i].Water = listofRegs[i].Water.slice(listofRegs[i].Water.indexOf(')') + 2 )
+//         }
+//         if(listofRegs[i].Water === '') {
+//             listofRegs[i].Water  = listofRegs[i-1].Water 
+//         } 
+//     };
+    
+//    return listofRegs;
+//     // console.log(listofRegs);
+// });
+// console.log(regultionData);
+//  //console.log(regultionData);  SCOPE ISSIUE!!
+
+//PROMISES
+const result = new Promise((resolve, reject) => {
+    tabletojson.convertUrl(url, (tablesAsJson) => {
+        var listofRegs = tablesAsJson[0];
+        for (let i = 0;i < listofRegs.length; i++) {
+            if(listofRegs[i].Water.includes('(a)') ||listofRegs[i].Water.includes('(b)') || listofRegs[i].Water.includes('(c)') || listofRegs[i].Water.includes('(d)') ) {
             listofRegs[i].Water = listofRegs[i].Water.slice(listofRegs[i].Water.indexOf(')') + 2 )
-        }
-        if(listofRegs[i].Water === '') {
-            listofRegs[i].Water  = listofRegs[i-1].Water 
-        } 
-    }
+            };
+            if(listofRegs[i].Water === '') {
+              listofRegs[i].Water  = listofRegs[i-1].Water 
+            }; 
+        };
+        console.log(listofRegs);
+        return listofRegs;
+    })});
+    var regulationData = result.then((data) => {
+        //console.log(data);
+        return data;
+    }).catch(err => console.log(err));
   
-    return listofRegs 
-});
- console.log(regultionData); // SCOPE ISSIUE!!
 
-
- db.collection('inventory').insertMany(
-     regulationData
- )
-  .then(function(result) {
-    // process result
-    console.log(result.insertedIds);
-  })
 
 
 
