@@ -37,31 +37,59 @@ const result = new Promise((resolve, reject) => {
               listofRegs[i].Water  = listofRegs[i-1].Water 
             }; 
         };
-        console.log(listofRegs);
-        return listofRegs;
+        // console.log(listofRegs);
+        resolve (listofRegs);
     })});
-    var regulationData = result.then((data) => {
-        //console.log(data);
-        return data;
+   result.then((data) => {
+        console.log(data);
+        
+
+        var uri = "mongodb+srv://fishGarde:fishGarde@cluster0-sxcos.mongodb.net/test";
+    MongoClient.connect(uri, function(err, db) {
+    if (!err) {
+        var fishdb = db.db('fishGarde');
+        fishdb.collection('fishGarde').insertMany(
+            data
+        ).then(function(result) {
+        // process result
+        console.log(result.insertedIds);
+        })
+    
+        db.close();
+    }else {
+        console.log(err);
+    }
+
+
+});
+
+
     }).catch(err => console.log(err));
   
    
 
 
- db.collection('inventory').insertMany(
-        regulationData 
-    ).then(function(result) {
-    // process result
-    console.log(result.insertedIds);
-})
 
 
 
-// var uri = "mongodb+srv://fishGarde:<fishGarde>@cluster0-sxcos.mongodb.net/test";
+
+// var uri = "mongodb+srv://fishGarde:fishGarde@cluster0-sxcos.mongodb.net/test";
 // MongoClient.connect(uri, function(err, db) {
-// // Paste the following examples here
+//     if (!err) {
+//         var fishdb = db.db('fishGarde');
+//         fishdb.collection('fishGarde').insertMany(
+//             regulationData 
+//         ).then(function(result) {
+//         // process result
+//         console.log(result.insertedIds);
+//         })
+    
+//         db.close();
+//     }else {
+//         console.log(err);
+//     }
 
-// db.close();
+
 // });
 
 /**
